@@ -1,4 +1,4 @@
-import { Inter, Fraunces } from 'next/font/google';
+import { Inter, Archivo_Black } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({
@@ -8,10 +8,10 @@ const inter = Inter({
   display: 'swap',
 });
 
-const fraunces = Fraunces({
+const archivoBlack = Archivo_Black({
   subsets: ['latin'],
-  weight: ['400', '600', '800'],
-  variable: '--font-fraunces',
+  weight: ['400'],
+  variable: '--font-display',
   display: 'swap',
 });
 
@@ -23,7 +23,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="es" className={`${inter.variable} ${archivoBlack.variable}`}>
       <body>{children}</body>
     </html>
   );

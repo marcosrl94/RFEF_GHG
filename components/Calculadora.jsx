@@ -97,6 +97,15 @@ const FACTOR_LABELS = {
   freight_air: 'Carga aérea (t-km)',
 };
 
+// Paleta para gráficos — austera, derivada del sistema RFEF
+const CHART_COLORS = {
+  mobility: '#E30613',
+  accommodation: '#0A0A0A',
+  facilities: '#FFD700',
+  goods: '#8B1A1A',
+  logistics: '#5A5A5A',
+};
+
 // ============================================================
 // COMPONENTE PRINCIPAL
 // ============================================================
@@ -266,11 +275,11 @@ export default function HuellaCarbonoRFEF() {
 
   // Datos para gráficos
   const areaData = [
-    { name: 'Movilidad', value: calculations.mobilityTotal / 1000, color: '#C8102E' },
-    { name: 'Alojamiento', value: calculations.accommodationTotal / 1000, color: '#1B365D' },
-    { name: 'Instalaciones', value: calculations.facilitiesTotal / 1000, color: '#FFC72C' },
-    { name: 'Bienes y servicios', value: calculations.goodsTotal / 1000, color: '#5C8001' },
-    { name: 'Logística y residuos', value: calculations.logisticsTotal / 1000, color: '#7E3F8F' },
+    { name: 'Movilidad', value: calculations.mobilityTotal / 1000, color: CHART_COLORS.mobility },
+    { name: 'Alojamiento', value: calculations.accommodationTotal / 1000, color: CHART_COLORS.accommodation },
+    { name: 'Instalaciones', value: calculations.facilitiesTotal / 1000, color: CHART_COLORS.facilities },
+    { name: 'Bienes y servicios', value: calculations.goodsTotal / 1000, color: CHART_COLORS.goods },
+    { name: 'Logística y residuos', value: calculations.logisticsTotal / 1000, color: CHART_COLORS.logistics },
   ];
 
   const fanChartData = Object.entries(calculations.fanBreakdown)
@@ -298,7 +307,7 @@ export default function HuellaCarbonoRFEF() {
       ['Por asistente kgCO2e', calculations.perAttendee.toFixed(1)],
     ];
     const csv = rows.map(r => r.join(';')).join('\n');
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -321,36 +330,76 @@ export default function HuellaCarbonoRFEF() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F5F1E8' }}>
+    <div style={{ minHeight: '100vh', background: '#FFFFFF' }}>
       <style>{`
         .input-field {
           width: 100%;
           padding: 10px 14px;
-          border: 1px solid #D4CCB8;
-          background: white;
+          border: 1px solid #E5E5E5;
+          border-radius: 0;
+          background: #FFFFFF;
           font-family: inherit;
           font-size: 14px;
-          color: #1B365D;
-          transition: all 0.2s;
+          color: #0A0A0A;
+          transition: border-color 0.15s;
         }
         .input-field:focus {
           outline: none;
-          border-color: #C8102E;
-          box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+          border-color: #E30613;
+          box-shadow: 0 0 0 2px rgba(227, 6, 19, 0.15);
         }
         .input-label {
           display: block;
           font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
+          font-weight: 700;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #5C5440;
+          color: #5A5A5A;
           margin-bottom: 6px;
         }
         .panel {
-          background: white;
-          border: 1px solid #E8DFC8;
+          background: #FFFFFF;
+          border: 1px solid #E5E5E5;
           padding: 32px;
+        }
+        .h-display {
+          font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
+          letter-spacing: -0.01em;
+          text-transform: uppercase;
+        }
+        .eyebrow {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+        .btn-primary {
+          padding: 12px 22px;
+          background: #E30613;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 0;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-family: inherit;
+          transition: background 0.15s;
+        }
+        .btn-primary:hover { background: #B8050F; }
+        .btn-secondary {
+          padding: 11px 20px;
+          background: #0A0A0A;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 0;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-family: inherit;
         }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -361,25 +410,30 @@ export default function HuellaCarbonoRFEF() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ background: '#1B365D', color: 'white', padding: '24px 40px', borderBottom: '4px solid #C8102E' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 1400, margin: '0 auto' }}>
-          <div>
-            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#FFC72C', marginBottom: 4 }}>
-              Real Federación Española de Fútbol
+      <header style={{ background: '#E30613', color: '#FFFFFF', padding: '28px 40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, maxWidth: 1400, margin: '0 auto', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <div className="h-display" style={{ fontSize: 38, lineHeight: 1, padding: '14px 18px', background: '#FFFFFF', color: '#E30613' }}>
+              RFEF
             </div>
-            <h1 className="display-font" style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
-              Calculadora de Huella de Carbono
-            </h1>
-            <div style={{ fontSize: 12, color: '#B8C5D6', marginTop: 4 }}>
-              Scope 3 · Metodología UEFA / GHG Protocol
+            <div>
+              <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)', marginBottom: 6 }}>
+                Real Federación Española de Fútbol
+              </div>
+              <h1 className="h-display" style={{ fontSize: 32, margin: 0, lineHeight: 1.05 }}>
+                Huella de Carbono
+              </h1>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', marginTop: 6, letterSpacing: '0.04em' }}>
+                Scope 3 · Metodología UEFA / GHG Protocol
+              </div>
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#FFC72C' }}>Total estimado</div>
-            <div className="display-font" style={{ fontSize: 36, fontWeight: 800, lineHeight: 1 }}>
-              {formatT(calculations.grandTotal)} <span style={{ fontSize: 16, color: '#B8C5D6' }}>tCO₂e</span>
+            <div className="eyebrow" style={{ color: '#FFD700' }}>Total estimado</div>
+            <div className="h-display" style={{ fontSize: 44, lineHeight: 1, marginTop: 6 }}>
+              {formatT(calculations.grandTotal)} <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)' }}>tCO₂e</span>
             </div>
-            <div style={{ fontSize: 12, color: '#B8C5D6', marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', marginTop: 6 }}>
               {calculations.perAttendee.toFixed(1)} kgCO₂e / asistente
             </div>
           </div>
@@ -387,7 +441,7 @@ export default function HuellaCarbonoRFEF() {
       </header>
 
       {/* TABS */}
-      <nav style={{ background: 'white', borderBottom: '1px solid #E8DFC8', padding: '0 40px', overflowX: 'auto' }}>
+      <nav style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E5E5', padding: '0 40px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 0, maxWidth: 1400, margin: '0 auto' }}>
           {tabs.map(t => {
             const Icon = t.icon;
@@ -397,19 +451,21 @@ export default function HuellaCarbonoRFEF() {
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
                 style={{
-                  padding: '16px 20px',
+                  padding: '18px 22px',
                   background: 'none',
                   border: 'none',
-                  borderBottom: active ? '3px solid #C8102E' : '3px solid transparent',
-                  color: active ? '#1B365D' : '#5C5440',
-                  fontWeight: active ? 700 : 500,
-                  fontSize: 13,
+                  borderBottom: active ? '3px solid #E30613' : '3px solid transparent',
+                  color: active ? '#E30613' : '#5A5A5A',
+                  fontWeight: 700,
+                  fontSize: 12,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.2s',
+                  transition: 'color 0.15s, border-color 0.15s',
                   fontFamily: 'inherit',
                 }}
               >
@@ -426,10 +482,10 @@ export default function HuellaCarbonoRFEF() {
         {/* TAB: EVENTO */}
         {activeTab === 'evento' && (
           <div className="panel">
-            <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+            <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
               Datos del evento
             </h2>
-            <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+            <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
               Información general del evento o competición que se va a evaluar.
             </p>
             <div className="grid-3">
@@ -447,35 +503,46 @@ export default function HuellaCarbonoRFEF() {
               </div>
             </div>
 
-            <div style={{ marginTop: 32, padding: 20, background: '#F5F1E8', borderLeft: '3px solid #C8102E' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8102E', marginBottom: 8 }}>
+            <div style={{ marginTop: 32, padding: 24, background: '#F4F4F4', borderLeft: '4px solid #E30613' }}>
+              <div className="eyebrow" style={{ color: '#E30613', marginBottom: 10 }}>
                 Cómo funciona
               </div>
-              <p style={{ fontSize: 14, color: '#1B365D', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: 14, color: '#0A0A0A', lineHeight: 1.6, margin: 0 }}>
                 Esta herramienta sigue las cuatro áreas de la metodología UEFA: <strong>movilidad</strong>, <strong>instalaciones</strong>,{' '}
                 <strong>bienes y servicios adquiridos</strong> y <strong>logística</strong>. Rellena cada pestaña con los datos disponibles —
                 las celdas vienen precargadas con valores tipo de una final de Copa para que puedas iterar rápido. Los factores de emisión
-                por defecto provienen de DEFRA 2024 y MITECO; puedes ajustarlos en la pestaña &quot;Factores&quot;.
+                por defecto provienen de DEFRA 2024 y MITECO; puedes ajustarlos en la pestaña &laquo;Factores&raquo;.
               </p>
             </div>
 
             <div className="grid-4" style={{ marginTop: 24 }}>
               {[
-                { label: 'Movilidad', value: calculations.mobilityTotal, icon: Plane, color: '#C8102E' },
-                { label: 'Bienes y servicios', value: calculations.goodsTotal, icon: Package, color: '#5C8001' },
-                { label: 'Logística', value: calculations.logisticsTotal, icon: Truck, color: '#7E3F8F' },
-                { label: 'Resto', value: calculations.accommodationTotal + calculations.facilitiesTotal, icon: Building2, color: '#1B365D' },
-              ].map(c => {
+                { label: 'Movilidad', value: calculations.mobilityTotal, icon: Plane },
+                { label: 'Bienes y servicios', value: calculations.goodsTotal, icon: Package },
+                { label: 'Logística', value: calculations.logisticsTotal, icon: Truck },
+                { label: 'Resto', value: calculations.accommodationTotal + calculations.facilitiesTotal, icon: Building2 },
+              ].map((c, idx) => {
                 const Icon = c.icon;
                 const pct = calculations.grandTotal > 0 ? (c.value / calculations.grandTotal) * 100 : 0;
+                const isStar = idx === 0;
                 return (
-                  <div key={c.label} style={{ padding: 20, background: '#F5F1E8', borderTop: `3px solid ${c.color}` }}>
-                    <Icon size={18} style={{ color: c.color }} />
-                    <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440', marginTop: 8 }}>{c.label}</div>
-                    <div className="display-font" style={{ fontSize: 24, fontWeight: 800, color: '#1B365D', marginTop: 4 }}>
-                      {formatT(c.value)} <span style={{ fontSize: 12, color: '#5C5440' }}>tCO₂e</span>
+                  <div
+                    key={c.label}
+                    style={{
+                      padding: 22,
+                      background: isStar ? '#E30613' : '#FFFFFF',
+                      color: isStar ? '#FFFFFF' : '#0A0A0A',
+                      border: isStar ? 'none' : '1px solid #E5E5E5',
+                    }}
+                  >
+                    <Icon size={20} style={{ color: isStar ? '#FFFFFF' : '#E30613' }} />
+                    <div className="eyebrow" style={{ color: isStar ? 'rgba(255,255,255,0.85)' : '#5A5A5A', marginTop: 12 }}>
+                      {c.label}
                     </div>
-                    <div style={{ fontSize: 12, color: '#5C5440', marginTop: 2 }}>{pct.toFixed(1)}% del total</div>
+                    <div className="h-display" style={{ fontSize: 28, marginTop: 6, lineHeight: 1 }}>
+                      {formatT(c.value)} <span style={{ fontSize: 12, color: isStar ? 'rgba(255,255,255,0.85)' : '#5A5A5A' }}>tCO₂e</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: isStar ? 'rgba(255,255,255,0.85)' : '#5A5A5A', marginTop: 6 }}>{pct.toFixed(1)}% del total</div>
                   </div>
                 );
               })}
@@ -487,10 +554,10 @@ export default function HuellaCarbonoRFEF() {
         {activeTab === 'movilidad' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Movilidad de aficionados
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Reparto modal y distancia ida-vuelta media. Habitualmente se obtiene mediante encuestas a asistentes.
                 La suma de porcentajes debería aproximarse al 100%.
               </p>
@@ -501,43 +568,46 @@ export default function HuellaCarbonoRFEF() {
                   value={carOccupancy} onChange={e => setCarOccupancy(+e.target.value)} />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', padding: '12px 0', borderBottom: '2px solid #1B365D', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', padding: '12px 12px', background: '#0A0A0A', color: '#FFFFFF', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 <div>Modo de transporte</div>
                 <div>% asistentes</div>
                 <div>km ida-vuelta</div>
                 <div style={{ textAlign: 'right' }}>tCO₂e</div>
               </div>
-              {Object.entries(fanMobility).map(([mode, data]) => {
+              {Object.entries(fanMobility).map(([mode, data], i) => {
                 const pax = (attendees * data.pct) / 100;
                 const emissions = pax * data.km * factors[mode] / 1000;
                 return (
-                  <div key={mode} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F0EAD6' }}>
-                    <div style={{ fontSize: 13, color: '#1B365D' }}>{FACTOR_LABELS[mode].replace(' (pas-km)', '')}</div>
+                  <div key={mode} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid #E5E5E5', background: i % 2 === 0 ? '#FFFFFF' : '#F9F9F9' }}>
+                    <div style={{ fontSize: 13, color: '#0A0A0A' }}>{FACTOR_LABELS[mode].replace(' (pas-km)', '')}</div>
                     <input type="number" className="input-field" style={{ padding: '6px 10px' }}
                       value={data.pct} onChange={e => setFanMobility({ ...fanMobility, [mode]: { ...data, pct: +e.target.value } })} />
                     <input type="number" className="input-field" style={{ padding: '6px 10px' }}
                       value={data.km} onChange={e => setFanMobility({ ...fanMobility, [mode]: { ...data, km: +e.target.value } })} />
-                    <div style={{ textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, color: '#C8102E', fontSize: 14 }}>
+                    <div className="h-display" style={{ textAlign: 'right', color: '#E30613', fontSize: 16 }}>
                       {emissions.toFixed(1)}
                     </div>
                   </div>
                 );
               })}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', marginTop: 8, background: '#F5F1E8', paddingLeft: 16, paddingRight: 16 }}>
-                <div style={{ fontWeight: 700, color: '#1B365D' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 16px', marginTop: 8, background: '#F4F4F4' }}>
+                <div className="eyebrow" style={{ color: '#0A0A0A' }}>
                   Suma %: {Object.values(fanMobility).reduce((s, d) => s + d.pct, 0)}%
                 </div>
-                <div className="display-font" style={{ fontSize: 18, fontWeight: 700, color: '#C8102E' }}>
-                  Subtotal: {formatT(calculations.fanEmissions)} tCO₂e
+                <div>
+                  <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal</span>
+                  <span className="h-display" style={{ fontSize: 22, color: '#E30613' }}>
+                    {formatT(calculations.fanEmissions)} tCO₂e
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Movilidad de equipos, árbitros y staff
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Desplazamientos de jugadores, cuerpo técnico, árbitros, delegados RFEF y prensa acreditada.
               </p>
               <div className="grid-2">
@@ -582,9 +652,10 @@ export default function HuellaCarbonoRFEF() {
                     onChange={e => setTeamTravel({ ...teamTravel, car_km: +e.target.value })} />
                 </div>
               </div>
-              <div style={{ marginTop: 16, padding: 12, background: '#F5F1E8', textAlign: 'right' }}>
-                <span className="display-font" style={{ fontSize: 18, fontWeight: 700, color: '#C8102E' }}>
-                  Subtotal: {formatT(calculations.teamEmissions)} tCO₂e
+              <div style={{ marginTop: 16, padding: '16px 18px', background: '#F4F4F4', textAlign: 'right' }}>
+                <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal</span>
+                <span className="h-display" style={{ fontSize: 22, color: '#E30613' }}>
+                  {formatT(calculations.teamEmissions)} tCO₂e
                 </span>
               </div>
             </div>
@@ -594,10 +665,10 @@ export default function HuellaCarbonoRFEF() {
         {/* TAB: ALOJAMIENTO */}
         {activeTab === 'alojamiento' && (
           <div className="panel">
-            <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+            <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
               Alojamiento
             </h2>
-            <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+            <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
               Pernoctaciones de equipos, árbitros, staff RFEF, prensa, VIPs y aficionados desplazados (si se contabilizan).
             </p>
             <div className="grid-3">
@@ -605,24 +676,25 @@ export default function HuellaCarbonoRFEF() {
                 <label className="input-label">Noches en hotel · España</label>
                 <input type="number" className="input-field" value={accommodation.nights_spain}
                   onChange={e => setAccommodation({ ...accommodation, nights_spain: +e.target.value })} />
-                <div style={{ fontSize: 11, color: '#5C5440', marginTop: 4 }}>{factors.hotel_spain} kgCO₂e/noche</div>
+                <div style={{ fontSize: 11, color: '#5A5A5A', marginTop: 4 }}>{factors.hotel_spain} kgCO₂e/noche</div>
               </div>
               <div>
                 <label className="input-label">Noches en hotel · Europa</label>
                 <input type="number" className="input-field" value={accommodation.nights_europe}
                   onChange={e => setAccommodation({ ...accommodation, nights_europe: +e.target.value })} />
-                <div style={{ fontSize: 11, color: '#5C5440', marginTop: 4 }}>{factors.hotel_europe} kgCO₂e/noche</div>
+                <div style={{ fontSize: 11, color: '#5A5A5A', marginTop: 4 }}>{factors.hotel_europe} kgCO₂e/noche</div>
               </div>
               <div>
                 <label className="input-label">Noches en hotel · Internacional</label>
                 <input type="number" className="input-field" value={accommodation.nights_intl}
                   onChange={e => setAccommodation({ ...accommodation, nights_intl: +e.target.value })} />
-                <div style={{ fontSize: 11, color: '#5C5440', marginTop: 4 }}>{factors.hotel_intl} kgCO₂e/noche</div>
+                <div style={{ fontSize: 11, color: '#5A5A5A', marginTop: 4 }}>{factors.hotel_intl} kgCO₂e/noche</div>
               </div>
             </div>
-            <div style={{ marginTop: 24, padding: 16, background: '#F5F1E8', textAlign: 'right' }}>
-              <span className="display-font" style={{ fontSize: 20, fontWeight: 700, color: '#C8102E' }}>
-                Subtotal alojamiento: {formatT(calculations.accommodationTotal)} tCO₂e
+            <div style={{ marginTop: 24, padding: '16px 18px', background: '#F4F4F4', textAlign: 'right' }}>
+              <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal alojamiento</span>
+              <span className="h-display" style={{ fontSize: 24, color: '#E30613' }}>
+                {formatT(calculations.accommodationTotal)} tCO₂e
               </span>
             </div>
           </div>
@@ -631,10 +703,10 @@ export default function HuellaCarbonoRFEF() {
         {/* TAB: INSTALACIONES */}
         {activeTab === 'instalaciones' && (
           <div className="panel">
-            <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+            <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
               Instalaciones — emisiones upstream
             </h2>
-            <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+            <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
               Aquí se contabilizan únicamente las emisiones <strong>indirectas upstream</strong> de la energía consumida en el estadio
               (Scope 3 categoría 3: extracción, refino y T&D). Las emisiones directas del consumo eléctrico van en Scope 2.
             </p>
@@ -660,9 +732,10 @@ export default function HuellaCarbonoRFEF() {
                   onChange={e => setFacilities({ ...facilities, water_m3: +e.target.value })} />
               </div>
             </div>
-            <div style={{ marginTop: 24, padding: 16, background: '#F5F1E8', textAlign: 'right' }}>
-              <span className="display-font" style={{ fontSize: 20, fontWeight: 700, color: '#C8102E' }}>
-                Subtotal instalaciones (upstream): {formatT(calculations.facilitiesTotal)} tCO₂e
+            <div style={{ marginTop: 24, padding: '16px 18px', background: '#F4F4F4', textAlign: 'right' }}>
+              <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal instalaciones (upstream)</span>
+              <span className="h-display" style={{ fontSize: 24, color: '#E30613' }}>
+                {formatT(calculations.facilitiesTotal)} tCO₂e
               </span>
             </div>
           </div>
@@ -672,10 +745,10 @@ export default function HuellaCarbonoRFEF() {
         {activeTab === 'bienes' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Bienes y servicios — método económico
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Cálculo basado en el gasto en € (método spend-based). Útil cuando no se dispone de datos físicos detallados.
               </p>
               <div className="grid-4">
@@ -703,10 +776,10 @@ export default function HuellaCarbonoRFEF() {
             </div>
 
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Catering — desglose por unidades
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Si se conoce el número de comidas/bebidas servidas, se obtiene un cálculo más preciso que con el método económico.
               </p>
               <div className="grid-3">
@@ -736,9 +809,10 @@ export default function HuellaCarbonoRFEF() {
                     onChange={e => setGoods({ ...goods, bev_soft: +e.target.value })} />
                 </div>
               </div>
-              <div style={{ marginTop: 24, padding: 16, background: '#F5F1E8', textAlign: 'right' }}>
-                <span className="display-font" style={{ fontSize: 20, fontWeight: 700, color: '#C8102E' }}>
-                  Subtotal bienes y servicios: {formatT(calculations.goodsTotal)} tCO₂e
+              <div style={{ marginTop: 24, padding: '16px 18px', background: '#F4F4F4', textAlign: 'right' }}>
+                <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal bienes y servicios</span>
+                <span className="h-display" style={{ fontSize: 24, color: '#E30613' }}>
+                  {formatT(calculations.goodsTotal)} tCO₂e
                 </span>
               </div>
             </div>
@@ -749,10 +823,10 @@ export default function HuellaCarbonoRFEF() {
         {activeTab === 'logistica' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Transporte de mercancías
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Movimiento upstream y downstream de equipaciones, material de TV, mobiliario, catering, etc. Unidad: <strong>tonelada-kilómetro</strong> (peso × distancia).
               </p>
               <div className="grid-3">
@@ -775,10 +849,10 @@ export default function HuellaCarbonoRFEF() {
             </div>
 
             <div className="panel">
-              <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+              <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
                 Residuos generados
               </h2>
-              <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
                 Toneladas de residuos por destino final. Datos habituales del proveedor de limpieza/gestor de residuos.
               </p>
               <div className="grid-3">
@@ -798,9 +872,10 @@ export default function HuellaCarbonoRFEF() {
                     onChange={e => setLogistics({ ...logistics, waste_compost_kg: +e.target.value })} />
                 </div>
               </div>
-              <div style={{ marginTop: 24, padding: 16, background: '#F5F1E8', textAlign: 'right' }}>
-                <span className="display-font" style={{ fontSize: 20, fontWeight: 700, color: '#C8102E' }}>
-                  Subtotal logística: {formatT(calculations.logisticsTotal)} tCO₂e
+              <div style={{ marginTop: 24, padding: '16px 18px', background: '#F4F4F4', textAlign: 'right' }}>
+                <span className="eyebrow" style={{ color: '#5A5A5A', marginRight: 10 }}>Subtotal logística</span>
+                <span className="h-display" style={{ fontSize: 24, color: '#E30613' }}>
+                  {formatT(calculations.logisticsTotal)} tCO₂e
                 </span>
               </div>
             </div>
@@ -810,24 +885,23 @@ export default function HuellaCarbonoRFEF() {
         {/* TAB: FACTORES */}
         {activeTab === 'factores' && (
           <div className="panel">
-            <h2 className="display-font" style={{ fontSize: 24, color: '#1B365D', marginTop: 0, marginBottom: 8 }}>
+            <h2 className="h-display" style={{ fontSize: 26, color: '#0A0A0A', marginTop: 0, marginBottom: 8 }}>
               Factores de emisión
             </h2>
-            <p style={{ color: '#5C5440', fontSize: 14, marginBottom: 24 }}>
+            <p style={{ color: '#5A5A5A', fontSize: 14, marginBottom: 24 }}>
               Valores por defecto basados en DEFRA 2024 GHG Conversion Factors y MITECO. Edítalos si dispones de factores
               específicos o si necesitas alinearlos con la metodología UEFA Carbon Footprint Calculator.
             </p>
             <div className="grid-2" style={{ gap: 12 }}>
               {Object.entries(factors).map(([key, val]) => (
-                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', background: '#F5F1E8' }}>
-                  <div style={{ flex: 1, fontSize: 13, color: '#1B365D' }}>{FACTOR_LABELS[key]}</div>
+                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: '#F4F4F4', border: '1px solid #E5E5E5' }}>
+                  <div style={{ flex: 1, fontSize: 13, color: '#0A0A0A' }}>{FACTOR_LABELS[key]}</div>
                   <input type="number" step="0.001" className="input-field" style={{ width: 110, padding: '6px 10px' }}
                     value={val} onChange={e => setFactors({ ...factors, [key]: +e.target.value })} />
                 </div>
               ))}
             </div>
-            <button onClick={() => setFactors(DEFAULT_FACTORS)}
-              style={{ marginTop: 24, padding: '10px 20px', background: '#1B365D', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 13 }}>
+            <button onClick={() => setFactors(DEFAULT_FACTORS)} className="btn-secondary" style={{ marginTop: 24 }}>
               Restaurar valores por defecto
             </button>
           </div>
@@ -836,53 +910,54 @@ export default function HuellaCarbonoRFEF() {
         {/* TAB: RESULTADOS */}
         {activeTab === 'resultados' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div className="panel" style={{ background: '#1B365D', color: 'white', borderColor: '#1B365D' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ background: '#E30613', color: '#FFFFFF', padding: 36 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24, marginBottom: 32, flexWrap: 'wrap' }}>
                 <div>
-                  <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#FFC72C' }}>Resultado global</div>
-                  <h2 className="display-font" style={{ fontSize: 28, margin: '8px 0 0 0', fontWeight: 800 }}>
+                  <div className="eyebrow" style={{ color: '#FFD700' }}>Resumen del evento</div>
+                  <h2 className="h-display" style={{ fontSize: 36, margin: '10px 0 0 0', lineHeight: 1.05 }}>
                     {eventName}
                   </h2>
-                  <div style={{ color: '#B8C5D6', fontSize: 13, marginTop: 4 }}>
+                  <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, marginTop: 6, letterSpacing: '0.04em' }}>
                     {eventDate} · {attendees.toLocaleString('es-ES')} asistentes
                   </div>
                 </div>
                 <button onClick={exportCSV} style={{
-                  padding: '12px 24px', background: '#C8102E', color: 'white', border: 'none', cursor: 'pointer',
-                  fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8
+                  padding: '14px 24px', background: '#FFFFFF', color: '#E30613', border: 'none', cursor: 'pointer',
+                  fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase',
+                  display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'inherit',
                 }}>
                   <Download size={16} /> Exportar CSV
                 </button>
               </div>
 
               <div className="grid-3">
-                <div style={{ borderLeft: '3px solid #C8102E', paddingLeft: 20 }}>
-                  <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#B8C5D6' }}>Total</div>
-                  <div className="display-font" style={{ fontSize: 42, fontWeight: 800, lineHeight: 1.1 }}>
+                <div style={{ borderTop: '4px solid #FFFFFF', paddingTop: 16 }}>
+                  <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>Total</div>
+                  <div className="h-display" style={{ fontSize: 56, lineHeight: 1, marginTop: 8 }}>
                     {formatT(calculations.grandTotal)}
                   </div>
-                  <div style={{ color: '#FFC72C', fontSize: 13, fontWeight: 600 }}>tCO₂e</div>
+                  <div className="eyebrow" style={{ color: '#FFD700', marginTop: 6 }}>tCO₂e</div>
                 </div>
-                <div style={{ borderLeft: '3px solid #FFC72C', paddingLeft: 20 }}>
-                  <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#B8C5D6' }}>Por asistente</div>
-                  <div className="display-font" style={{ fontSize: 42, fontWeight: 800, lineHeight: 1.1 }}>
+                <div style={{ borderTop: '4px solid #FFD700', paddingTop: 16 }}>
+                  <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>Por asistente</div>
+                  <div className="h-display" style={{ fontSize: 56, lineHeight: 1, marginTop: 8 }}>
                     {calculations.perAttendee.toFixed(1)}
                   </div>
-                  <div style={{ color: '#FFC72C', fontSize: 13, fontWeight: 600 }}>kgCO₂e / persona</div>
+                  <div className="eyebrow" style={{ color: '#FFD700', marginTop: 6 }}>kgCO₂e / persona</div>
                 </div>
-                <div style={{ borderLeft: '3px solid #B8C5D6', paddingLeft: 20 }}>
-                  <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#B8C5D6' }}>Equivalencia</div>
-                  <div className="display-font" style={{ fontSize: 42, fontWeight: 800, lineHeight: 1.1 }}>
+                <div style={{ borderTop: '4px solid rgba(255,255,255,0.4)', paddingTop: 16 }}>
+                  <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>Equivalencia</div>
+                  <div className="h-display" style={{ fontSize: 56, lineHeight: 1, marginTop: 8 }}>
                     {Math.round(calculations.grandTotal / 1000 / 5.1).toLocaleString('es-ES')}
                   </div>
-                  <div style={{ color: '#FFC72C', fontSize: 13, fontWeight: 600 }}>coches/año</div>
+                  <div className="eyebrow" style={{ color: '#FFD700', marginTop: 6 }}>coches/año</div>
                 </div>
               </div>
             </div>
 
             <div className="grid-2">
               <div className="panel">
-                <h3 className="display-font" style={{ fontSize: 18, color: '#1B365D', marginTop: 0 }}>
+                <h3 className="h-display" style={{ fontSize: 18, color: '#0A0A0A', marginTop: 0, marginBottom: 16 }}>
                   Distribución por área UEFA
                 </h3>
                 <ResponsiveContainer width="100%" height={280}>
@@ -897,7 +972,7 @@ export default function HuellaCarbonoRFEF() {
               </div>
 
               <div className="panel">
-                <h3 className="display-font" style={{ fontSize: 18, color: '#1B365D', marginTop: 0 }}>
+                <h3 className="h-display" style={{ fontSize: 18, color: '#0A0A0A', marginTop: 0, marginBottom: 16 }}>
                   Movilidad de aficionados por modo
                 </h3>
                 <ResponsiveContainer width="100%" height={280}>
@@ -905,23 +980,23 @@ export default function HuellaCarbonoRFEF() {
                     <XAxis type="number" tick={{ fontSize: 11 }} />
                     <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={120} />
                     <Tooltip formatter={(v) => `${v.toFixed(1)} tCO₂e`} />
-                    <Bar dataKey="value" fill="#C8102E" />
+                    <Bar dataKey="value" fill="#E30613" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             <div className="panel">
-              <h3 className="display-font" style={{ fontSize: 18, color: '#1B365D', marginTop: 0 }}>
+              <h3 className="h-display" style={{ fontSize: 18, color: '#0A0A0A', marginTop: 0, marginBottom: 16 }}>
                 Desglose detallado
               </h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
-                  <tr style={{ borderBottom: '2px solid #1B365D' }}>
-                    <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440' }}>Categoría</th>
-                    <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440' }}>tCO₂e</th>
-                    <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440' }}>% total</th>
-                    <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5C5440' }}>kg/asistente</th>
+                  <tr style={{ background: '#0A0A0A', color: '#FFFFFF' }}>
+                    <th style={{ textAlign: 'left', padding: '14px 12px', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>Categoría</th>
+                    <th style={{ textAlign: 'right', padding: '14px 12px', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>tCO₂e</th>
+                    <th style={{ textAlign: 'right', padding: '14px 12px', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>% total</th>
+                    <th style={{ textAlign: 'right', padding: '14px 12px', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>kg/asistente</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -934,26 +1009,26 @@ export default function HuellaCarbonoRFEF() {
                     { name: 'Logística — Transporte', value: calculations.logisticsTransport, indent: true },
                     { name: 'Logística — Residuos', value: calculations.wasteTotal, indent: true },
                   ].map((row, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid #F0EAD6' }}>
-                      <td style={{ padding: '12px 8px', paddingLeft: row.indent ? 24 : 8, color: '#1B365D' }}>{row.name}</td>
-                      <td style={{ padding: '12px 8px', textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, color: '#C8102E' }}>
+                    <tr key={i} style={{ borderBottom: '1px solid #E5E5E5', background: i % 2 === 0 ? '#FFFFFF' : '#F9F9F9' }}>
+                      <td style={{ padding: '12px', paddingLeft: row.indent ? 28 : 12, color: '#0A0A0A' }}>{row.name}</td>
+                      <td className="h-display" style={{ padding: '12px', textAlign: 'right', color: '#E30613', fontSize: 16 }}>
                         {formatT(row.value)}
                       </td>
-                      <td style={{ padding: '12px 8px', textAlign: 'right', color: '#5C5440' }}>
+                      <td style={{ padding: '12px', textAlign: 'right', color: '#5A5A5A' }}>
                         {calculations.grandTotal > 0 ? ((row.value / calculations.grandTotal) * 100).toFixed(1) : '0'}%
                       </td>
-                      <td style={{ padding: '12px 8px', textAlign: 'right', color: '#5C5440' }}>
+                      <td style={{ padding: '12px', textAlign: 'right', color: '#5A5A5A' }}>
                         {(row.value / Math.max(attendees, 1)).toFixed(2)}
                       </td>
                     </tr>
                   ))}
-                  <tr style={{ borderTop: '2px solid #1B365D', background: '#F5F1E8' }}>
-                    <td style={{ padding: '14px 8px', fontWeight: 700, color: '#1B365D' }}>TOTAL</td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 800, fontSize: 16, color: '#C8102E' }}>
+                  <tr style={{ borderTop: '3px solid #E30613', background: '#F4F4F4' }}>
+                    <td className="h-display" style={{ padding: '16px 12px', color: '#0A0A0A', fontSize: 14 }}>Total</td>
+                    <td className="h-display" style={{ padding: '16px 12px', textAlign: 'right', fontSize: 18, color: '#E30613' }}>
                       {formatT(calculations.grandTotal)}
                     </td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right', fontWeight: 700, color: '#1B365D' }}>100%</td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right', fontWeight: 700, color: '#1B365D' }}>
+                    <td className="h-display" style={{ padding: '16px 12px', textAlign: 'right', color: '#0A0A0A' }}>100%</td>
+                    <td className="h-display" style={{ padding: '16px 12px', textAlign: 'right', color: '#0A0A0A' }}>
                       {calculations.perAttendee.toFixed(1)}
                     </td>
                   </tr>
@@ -964,13 +1039,14 @@ export default function HuellaCarbonoRFEF() {
         )}
       </main>
 
-      <footer style={{ background: '#1B365D', color: '#B8C5D6', padding: '24px 40px', marginTop: 48, fontSize: 12 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+      <footer style={{ background: '#0A0A0A', color: 'rgba(255,255,255,0.7)', padding: '28px 40px', marginTop: 48, fontSize: 12 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
+          <div className="eyebrow" style={{ color: '#FFFFFF' }}>RFEF · Sostenibilidad</div>
           <div>
             Calculadora basada en GHG Protocol Corporate Standard y UEFA Carbon Accounting Methodology (Dic 2024).
           </div>
           <div>
-            Factores de emisión: DEFRA 2024 · MITECO · IDAE · REE
+            Factores: DEFRA 2024 · MITECO · IDAE · REE
           </div>
         </div>
       </footer>
