@@ -321,10 +321,8 @@ export default function HuellaCarbonoRFEF() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F5F1E8', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#F5F1E8' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap');
-        .display-font { font-family: 'Fraunces', serif; }
         .input-field {
           width: 100%;
           padding: 10px 14px;
@@ -457,7 +455,7 @@ export default function HuellaCarbonoRFEF() {
                 Esta herramienta sigue las cuatro áreas de la metodología UEFA: <strong>movilidad</strong>, <strong>instalaciones</strong>,{' '}
                 <strong>bienes y servicios adquiridos</strong> y <strong>logística</strong>. Rellena cada pestaña con los datos disponibles —
                 las celdas vienen precargadas con valores tipo de una final de Copa para que puedas iterar rápido. Los factores de emisión
-                por defecto provienen de DEFRA 2024 y MITECO; puedes ajustarlos en la pestaña "Factores".
+                por defecto provienen de DEFRA 2024 y MITECO; puedes ajustarlos en la pestaña &quot;Factores&quot;.
               </p>
             </div>
 
@@ -519,7 +517,7 @@ export default function HuellaCarbonoRFEF() {
                       value={data.pct} onChange={e => setFanMobility({ ...fanMobility, [mode]: { ...data, pct: +e.target.value } })} />
                     <input type="number" className="input-field" style={{ padding: '6px 10px' }}
                       value={data.km} onChange={e => setFanMobility({ ...fanMobility, [mode]: { ...data, km: +e.target.value } })} />
-                    <div style={{ textAlign: 'right', fontFamily: 'Fraunces, serif', fontWeight: 600, color: '#C8102E', fontSize: 14 }}>
+                    <div style={{ textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, color: '#C8102E', fontSize: 14 }}>
                       {emissions.toFixed(1)}
                     </div>
                   </div>
@@ -938,7 +936,7 @@ export default function HuellaCarbonoRFEF() {
                   ].map((row, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid #F0EAD6' }}>
                       <td style={{ padding: '12px 8px', paddingLeft: row.indent ? 24 : 8, color: '#1B365D' }}>{row.name}</td>
-                      <td style={{ padding: '12px 8px', textAlign: 'right', fontFamily: 'Fraunces, serif', fontWeight: 600, color: '#C8102E' }}>
+                      <td style={{ padding: '12px 8px', textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, color: '#C8102E' }}>
                         {formatT(row.value)}
                       </td>
                       <td style={{ padding: '12px 8px', textAlign: 'right', color: '#5C5440' }}>
@@ -951,7 +949,7 @@ export default function HuellaCarbonoRFEF() {
                   ))}
                   <tr style={{ borderTop: '2px solid #1B365D', background: '#F5F1E8' }}>
                     <td style={{ padding: '14px 8px', fontWeight: 700, color: '#1B365D' }}>TOTAL</td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right', fontFamily: 'Fraunces, serif', fontWeight: 800, fontSize: 16, color: '#C8102E' }}>
+                    <td style={{ padding: '14px 8px', textAlign: 'right', fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 800, fontSize: 16, color: '#C8102E' }}>
                       {formatT(calculations.grandTotal)}
                     </td>
                     <td style={{ padding: '14px 8px', textAlign: 'right', fontWeight: 700, color: '#1B365D' }}>100%</td>
